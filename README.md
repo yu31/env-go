@@ -189,7 +189,7 @@ func (e *Embedded) Set(value string) error {
 
 type Config struct {
 	Retry int `env:"RETRY,default=10"`
-	Message string `env:"MESSAGE" default:"Hello world"`
+	Message string `env:"MESSAGE,default=Hello world"`
 	Embedded Embedded `env:"EMB"`
 }
 

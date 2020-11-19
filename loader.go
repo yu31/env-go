@@ -61,7 +61,7 @@ func WithPrefix(prefix string) Option {
 	}
 }
 
-// WithGetter set loader's Getter
+// WithGetter set loader's Getter instances
 func WithGetter(getter Getter) Option {
 	return func(opts *options) {
 		opts.getter = getter
@@ -156,7 +156,6 @@ func (p *Loader) loadValue(refVal reflect.Value, prefix string) error {
 		}
 
 		if !field.IsZero() && !p.opts.override {
-			fmt.Println("zero")
 			continue
 		}
 
@@ -196,14 +195,14 @@ func (p *Loader) parseTags(structField reflect.StructField) (*tagInfo, error) {
 		return nil, nil
 	}
 
-	values := strings.Split(value, ",")
-	key, opts := values[0], values[1:]
+	values := strings.SplitN(value, ",", -1)
+	key, args := values[0], values[1:]
 	if key == "" || key == "-" {
 		return nil, nil
 	}
 
 	if strings.Contains(key, " ") {
-		return nil, fmt.Errorf("loader: cannot contain white space characters in tag key, <%s>", key)
+		return nil, fmt.Errorf("loader: assigning '%s': invalid key in tag '%s', cannot contain white space characters", structField.Name, structField.Tag)
 	}
 
 	tags := &tagInfo{
@@ -211,20 +210,18 @@ func (p *Loader) parseTags(structField reflect.StructField) (*tagInfo, error) {
 		defVal: "",
 	}
 
-	for _, opt := range opts {
-		x := strings.Split(opt, "=")
+	for _, arg := range args {
+		x := strings.SplitN(arg, "=", 2)
 		k := x[0]
 		switch k {
 		case "default":
 			if len(x) != 2 {
-				return nil, fmt.Errorf("loader: invalid tag %s for %s, format sample: 'default=<x>'", structField.Tag, structField.Name)
+				return nil, fmt.Errorf("loader: assigning '%s': cannot parse keyword 'default' from tag '%s', format sample: 'default=xxx'", structField.Name, structField.Tag)
 			}
 			tags.defVal = x[1]
+		default:
+			//
 		}
-	}
-	// Attempt to get default value from tag 'default' if not set in tag 'loader'
-	if tags.defVal == "" {
-		tags.defVal = structTag.Get("default")
 	}
 	return tags, nil
 }

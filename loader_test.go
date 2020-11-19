@@ -42,7 +42,7 @@ type Specification struct {
 	Bool               bool               `loader:"Bool"`
 	BoolPtr            *bool              `loader:"BoolPtr"`
 	Str                string             `loader:"Str,default=x1"`
-	StrPtr             *string            `loader:"StrPtr" default:"y1"`
+	StrPtr             *string            `loader:"StrPtr,default=y1"`
 	Float32            float32            `loader:"Float32"`
 	Float64            float64            `loader:"Float64"`
 	Float32Ptr         *float32           `loader:"Float32Ptr"`
@@ -72,7 +72,7 @@ type Specification struct {
 	StrArrayElePtr     [3]*string         `loader:"StrArrayElePtr"`
 	StrArrayValElePtr  *[3]*string        `loader:"StrArrayValElePtr"`
 	StrSlice           []string           `loader:"StrSlice,default=x1 x2 x3"`
-	StrSlicePtr        *[]string          `loader:"StrSlicePtr" default:"y1 y2 y3"`
+	StrSlicePtr        *[]string          `loader:"StrSlicePtr,default=y1 y2 y3"`
 	StrSliceElePtr     []*string          `loader:"StrSliceElePtr"`
 	StrSliceValElePtr  *[]*string         `loader:"StrSliceValElePtr"`
 	IntArray           [3]int             `loader:"IntArray"`
@@ -105,6 +105,7 @@ type Specification struct {
 	Embedded1Ptr       *Embedded1         `loader:"Embedded1Ptr"`
 	TimeTime           time.Time          `loader:"TimeTime"`
 	TimeTimePtr        *time.Time         `loader:"TimeTimePtr"`
+	Message            string             `loader:"MESSAGE,default=Hello World"` // used to test default value with space
 }
 
 var SpecEnvs = `
@@ -356,6 +357,7 @@ func TestLoader_Load_Default(t *testing.T) {
 	require.Equal(t, "y1", *s.StrPtr)
 	require.Equal(t, []string{"x1", "x2", "x3"}, s.StrSlice)
 	require.Equal(t, []string{"y1", "y2", "y3"}, *s.StrSlicePtr)
+	require.Equal(t, "Hello World", s.Message)
 }
 
 func TestLoader_Load_NotPtr(t *testing.T) {
