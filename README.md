@@ -161,8 +161,9 @@ func main() {
 
 #### Default label and User-define Setter 
 
-```base
+```bash
 export EMB="127.0.0.1:9090"
+export LISTS="Joe/man Lisa/woman"
 ```
 
 ```go
@@ -174,6 +175,23 @@ import (
 
 	"github.com/DataWorkbench/loader"
 )
+
+type List struct{
+	Name string
+	Sex  string
+}
+
+// String for test output.
+func (l *List) String() string {
+	return fmt.Sprintf("{Name: %s, Sex: %s}", l.Name, l.Sex)
+}
+
+func (l *List) Set(value string) error {
+	x := strings.Split(value, "/")
+	l.Name = x[0]
+	l.Sex = x[1]
+	return nil
+}
 
 type Embedded struct {
 	IP  string
@@ -191,9 +209,13 @@ type Config struct {
 	Retry int `env:"RETRY,default=10"`
 	Message string `env:"MESSAGE,default=Hello world"`
 	Embedded Embedded `env:"EMB"`
+	Lists    []*List  `env:"LISTS"`
 }
 
 func main() {
+	//os.Setenv("EMB", "127.0.0.1:9090")
+	//os.Setenv("LISTS", "Joe/man Lisa/woman")
+
 	var c Config
 	l := loader.New(loader.WithTagName("env"))
 	if err := l.Load(&c); err != nil {
@@ -203,7 +225,7 @@ func main() {
 	fmt.Printf("%+v\n", c)
 
 	/* output:
-	{Retry:10 Message:Hello world Embedded:{IP:127.0.0.1 Port:9090}}
+	{Retry:10 Message:Hello world Embedded:{IP:127.0.0.1 Port:9090} Lists:[{Name: Joe, Sex: man} {Name: Lisa, Sex: woman}]}
 	*/
 }
 ```
