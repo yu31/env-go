@@ -228,6 +228,16 @@ func (p *Loader) parseTags(structField reflect.StructField) (*tagInfo, error) {
 
 // setField set value to the struct field
 func setField(field reflect.Value, value string) error {
+	refType := field.Type()
+	// create a new object if nil pointer
+	if refType.Kind() == reflect.Ptr {
+		refType = refType.Elem()
+		if field.IsNil() {
+			field.Set(reflect.New(refType))
+		}
+		field = field.Elem()
+	}
+	
 	if setters := getSetters(field); len(setters) != 0 {
 		var errs []error
 		for _, setter := range setters {
@@ -238,16 +248,6 @@ func setField(field reflect.Value, value string) error {
 			}
 		}
 		return fmt.Errorf("%v", errs)
-	}
-
-	refType := field.Type()
-	// create a new object if nil pointer
-	if refType.Kind() == reflect.Ptr {
-		refType = refType.Elem()
-		if field.IsNil() {
-			field.Set(reflect.New(refType))
-		}
-		field = field.Elem()
 	}
 
 	switch refType.Kind() {

@@ -13,6 +13,18 @@ import (
 
 var prefix = "LOADER"
 
+type CustomList struct {
+	Name string
+	Sex  string
+}
+
+func (cu *CustomList) Set(value string) error {
+	x := strings.Split(value, "/")
+	cu.Name = x[0]
+	cu.Sex = x[1]
+	return nil
+}
+
 type CustomSetter struct {
 	Value *string
 }
@@ -39,73 +51,77 @@ type Embedded1 struct {
 }
 
 type Specification struct {
-	Bool               bool               `loader:"Bool"`
-	BoolPtr            *bool              `loader:"BoolPtr"`
-	Str                string             `loader:"Str,default=x1"`
-	StrPtr             *string            `loader:"StrPtr,default=y1"`
-	Float32            float32            `loader:"Float32"`
-	Float64            float64            `loader:"Float64"`
-	Float32Ptr         *float32           `loader:"Float32Ptr"`
-	Float64Ptr         *float64           `loader:"Float64Ptr"`
-	Int                int                `loader:"Int"`
-	Int8               int8               `loader:"Int8"`
-	Int16              int16              `loader:"Int16"`
-	Int32              int32              `loader:"Int32"`
-	Int64              int64              `loader:"Int64"`
-	IntPtr             *int               `loader:"IntPtr"`
-	Int8Ptr            *int8              `loader:"Int8Ptr"`
-	Int16Ptr           *int16             `loader:"Int16Ptr"`
-	Int32Ptr           *int32             `loader:"Int32Ptr"`
-	Int64Ptr           *int64             `loader:"Int64Ptr"`
-	Uint               uint               `loader:"Uint"`
-	Uint8              uint8              `loader:"Uint8"`
-	Uint16             uint16             `loader:"Uint16"`
-	Uint32             uint32             `loader:"Uint32"`
-	Uint64             uint64             `loader:"Uint64"`
-	UintPtr            *uint              `loader:"UintPtr"`
-	Uint8Ptr           *uint8             `loader:"Uint8Ptr"`
-	Uint16Ptr          *uint16            `loader:"Uint16Ptr"`
-	Uint32Ptr          *uint32            `loader:"Uint32Ptr"`
-	Uint64Ptr          *uint64            `loader:"Uint64Ptr"`
-	StrArray           [3]string          `loader:"StrArray"`
-	StrArrayPtr        *[3]string         `loader:"StrArrayPtr"`
-	StrArrayElePtr     [3]*string         `loader:"StrArrayElePtr"`
-	StrArrayValElePtr  *[3]*string        `loader:"StrArrayValElePtr"`
-	StrSlice           []string           `loader:"StrSlice,default=x1 x2 x3"`
-	StrSlicePtr        *[]string          `loader:"StrSlicePtr,default=y1 y2 y3"`
-	StrSliceElePtr     []*string          `loader:"StrSliceElePtr"`
-	StrSliceValElePtr  *[]*string         `loader:"StrSliceValElePtr"`
-	IntArray           [3]int             `loader:"IntArray"`
-	IntArrayPtr        *[3]int            `loader:"IntArrayPtr"`
-	IntArrayElePtr     [3]*int            `loader:"IntArrayElePtr"`
-	IntArrayValElePtr  *[3]*int           `loader:"IntArrayValElePtr"`
-	IntSlice           []int              `loader:"IntSlice"`
-	IntSlicePtr        *[]int             `loader:"IntSlicePtr"`
-	IntSliceElePtr     []*int             `loader:"IntSliceElePtr"`
-	IntSliceValElePtr  *[]*int            `loader:"IntSliceValElePtr"`
-	UintArray          [3]uint            `loader:"UintArray"`
-	UintArrayPtr       *[3]uint           `loader:"UintArrayPtr"`
-	UintArrayElePtr    [3]*uint           `loader:"UintArrayElePtr"`
-	UintArrayValElePtr *[3]*uint          `loader:"UintArrayValElePtr"`
-	UintSlice          []uint             `loader:"UintSlice"`
-	UintSlicePtr       *[]uint            `loader:"UintSlicePtr"`
-	UintSliceElePtr    []*uint            `loader:"UintSliceElePtr"`
-	UintSliceValElePtr *[]*uint           `loader:"UintSliceValElePtr"`
-	URL                url.URL            `loader:"URL"`
-	URLPtr             *url.URL           `loader:"URLPtr"`
-	TimeDuration       time.Duration      `loader:"TimeDuration"`
-	TimeDurationPtr    *time.Duration     `loader:"TimeDurationPtr"`
-	MapInt             map[int]int        `loader:"MapInt"`
-	MapIntPtr          map[int]*int       `loader:"MapIntPtr"`
-	MapStr             map[string]string  `loader:"MapStr"`
-	MapStrPtr          map[string]*string `loader:"MapStrPtr"`
-	CustomSetter       CustomSetter       `loader:"CustomSetter"`
-	CustomSetterPtr    *CustomSetter      `loader:"CustomSetterPtr"`
-	Embedded1          Embedded1          `loader:"Embedded1"`
-	Embedded1Ptr       *Embedded1         `loader:"Embedded1Ptr"`
-	TimeTime           time.Time          `loader:"TimeTime"`
-	TimeTimePtr        *time.Time         `loader:"TimeTimePtr"`
-	Message            string             `loader:"MESSAGE,default=Hello World"` // used to test default value with space
+	Bool                bool               `loader:"Bool"`
+	BoolPtr             *bool              `loader:"BoolPtr"`
+	Str                 string             `loader:"Str,default=x1"`
+	StrPtr              *string            `loader:"StrPtr,default=y1"`
+	Float32             float32            `loader:"Float32"`
+	Float64             float64            `loader:"Float64"`
+	Float32Ptr          *float32           `loader:"Float32Ptr"`
+	Float64Ptr          *float64           `loader:"Float64Ptr"`
+	Int                 int                `loader:"Int"`
+	Int8                int8               `loader:"Int8"`
+	Int16               int16              `loader:"Int16"`
+	Int32               int32              `loader:"Int32"`
+	Int64               int64              `loader:"Int64"`
+	IntPtr              *int               `loader:"IntPtr"`
+	Int8Ptr             *int8              `loader:"Int8Ptr"`
+	Int16Ptr            *int16             `loader:"Int16Ptr"`
+	Int32Ptr            *int32             `loader:"Int32Ptr"`
+	Int64Ptr            *int64             `loader:"Int64Ptr"`
+	Uint                uint               `loader:"Uint"`
+	Uint8               uint8              `loader:"Uint8"`
+	Uint16              uint16             `loader:"Uint16"`
+	Uint32              uint32             `loader:"Uint32"`
+	Uint64              uint64             `loader:"Uint64"`
+	UintPtr             *uint              `loader:"UintPtr"`
+	Uint8Ptr            *uint8             `loader:"Uint8Ptr"`
+	Uint16Ptr           *uint16            `loader:"Uint16Ptr"`
+	Uint32Ptr           *uint32            `loader:"Uint32Ptr"`
+	Uint64Ptr           *uint64            `loader:"Uint64Ptr"`
+	StrArray            [3]string          `loader:"StrArray"`
+	StrArrayPtr         *[3]string         `loader:"StrArrayPtr"`
+	StrArrayElePtr      [3]*string         `loader:"StrArrayElePtr"`
+	StrArrayValElePtr   *[3]*string        `loader:"StrArrayValElePtr"`
+	StrSlice            []string           `loader:"StrSlice,default=x1 x2 x3"`
+	StrSlicePtr         *[]string          `loader:"StrSlicePtr,default=y1 y2 y3"`
+	StrSliceElePtr      []*string          `loader:"StrSliceElePtr"`
+	StrSliceValElePtr   *[]*string         `loader:"StrSliceValElePtr"`
+	IntArray            [3]int             `loader:"IntArray"`
+	IntArrayPtr         *[3]int            `loader:"IntArrayPtr"`
+	IntArrayElePtr      [3]*int            `loader:"IntArrayElePtr"`
+	IntArrayValElePtr   *[3]*int           `loader:"IntArrayValElePtr"`
+	IntSlice            []int              `loader:"IntSlice"`
+	IntSlicePtr         *[]int             `loader:"IntSlicePtr"`
+	IntSliceElePtr      []*int             `loader:"IntSliceElePtr"`
+	IntSliceValElePtr   *[]*int            `loader:"IntSliceValElePtr"`
+	UintArray           [3]uint            `loader:"UintArray"`
+	UintArrayPtr        *[3]uint           `loader:"UintArrayPtr"`
+	UintArrayElePtr     [3]*uint           `loader:"UintArrayElePtr"`
+	UintArrayValElePtr  *[3]*uint          `loader:"UintArrayValElePtr"`
+	UintSlice           []uint             `loader:"UintSlice"`
+	UintSlicePtr        *[]uint            `loader:"UintSlicePtr"`
+	UintSliceElePtr     []*uint            `loader:"UintSliceElePtr"`
+	UintSliceValElePtr  *[]*uint           `loader:"UintSliceValElePtr"`
+	URL                 url.URL            `loader:"URL"`
+	URLPtr              *url.URL           `loader:"URLPtr"`
+	TimeDuration        time.Duration      `loader:"TimeDuration"`
+	TimeDurationPtr     *time.Duration     `loader:"TimeDurationPtr"`
+	MapInt              map[int]int        `loader:"MapInt"`
+	MapIntPtr           map[int]*int       `loader:"MapIntPtr"`
+	MapStr              map[string]string  `loader:"MapStr"`
+	MapStrPtr           map[string]*string `loader:"MapStrPtr"`
+	CustomSetter        CustomSetter       `loader:"CustomSetter"`
+	CustomSetterPtr     *CustomSetter      `loader:"CustomSetterPtr"`
+	Embedded1           Embedded1          `loader:"Embedded1"`
+	Embedded1Ptr        *Embedded1         `loader:"Embedded1Ptr"`
+	TimeTime            time.Time          `loader:"TimeTime"`
+	TimeTimePtr         *time.Time         `loader:"TimeTimePtr"`
+	Message             string             `loader:"MESSAGE,default=Hello World"` // used to test default value with space
+	CustomList          []CustomList       `loader:"CustomList"`
+	CustomListPtr       *[]CustomList      `loader:"CustomListPtr"`
+	CustomListElePtr    []*CustomList      `loader:"CustomListElePtr"`
+	CustomListValElePtr *[]*CustomList     `loader:"CustomListValElePtr"`
 }
 
 var SpecEnvs = `
@@ -191,6 +207,10 @@ Embedded1Ptr_Embedded2_Em2StrPtr=b200
 Embedded1Ptr_Embedded2_Em2IntSlice=2000 2001 20002 20003
 TimeTime=2020-11-18T15:09:42.532851+08:00
 TimeTimePrt=2020-11-18T15:09:42.532851+08:00
+CustomList=Joe1/man Lisa1/woman
+CustomListPtr=Joe2/man Lisa2/woman
+CustomListElePtr=Joe3/man Lisa3/woman
+CustomListValElePtr=Joe4/man Lisa4/woman
 `
 
 func init() {
@@ -322,6 +342,7 @@ func TestLoader_Load_ByEnv(t *testing.T) {
 	require.Equal(t, "CustomSetter", *s.CustomSetter.Value)
 	require.Equal(t, "CustomSetterPtr", *s.CustomSetterPtr.Value)
 
+	// Test Embedded
 	require.Equal(t, 10, s.Embedded1.Em1Int)
 	require.Equal(t, 11, *s.Embedded1.Em1IntPtr)
 	require.Equal(t, "a1", s.Embedded1.Em1Str)
@@ -343,6 +364,31 @@ func TestLoader_Load_ByEnv(t *testing.T) {
 	require.Equal(t, "a200", s.Embedded1Ptr.Embedded2.Em2Str)
 	require.Equal(t, "b200", *s.Embedded1Ptr.Embedded2.Em2StrPtr)
 	require.Equal(t, []int{2000, 2001, 20002, 20003}, s.Embedded1Ptr.Embedded2.Em2IntSlice)
+
+	// Test CustomList.
+	require.Equal(t, 2, len(s.CustomList))
+	require.Equal(t, "Joe1", s.CustomList[0].Name)
+	require.Equal(t, "man", s.CustomList[0].Sex)
+	require.Equal(t, "Lisa1", s.CustomList[1].Name)
+	require.Equal(t, "woman", s.CustomList[1].Sex)
+
+	require.Equal(t, 2, len(*s.CustomListPtr))
+	require.Equal(t, "Joe2", (*s.CustomListPtr)[0].Name)
+	require.Equal(t, "man", (*s.CustomListPtr)[0].Sex)
+	require.Equal(t, "Lisa2", (*s.CustomListPtr)[1].Name)
+	require.Equal(t, "woman", (*s.CustomListPtr)[1].Sex)
+
+	require.Equal(t, 2, len(s.CustomListElePtr))
+	require.Equal(t, "Joe3", s.CustomListElePtr[0].Name)
+	require.Equal(t, "man", s.CustomListElePtr[0].Sex)
+	require.Equal(t, "Lisa3", s.CustomListElePtr[1].Name)
+	require.Equal(t, "woman", s.CustomListElePtr[1].Sex)
+
+	require.Equal(t, 2, len(*s.CustomListValElePtr))
+	require.Equal(t, "Joe4", (*s.CustomListValElePtr)[0].Name)
+	require.Equal(t, "man", (*s.CustomListValElePtr)[0].Sex)
+	require.Equal(t, "Lisa4", (*s.CustomListValElePtr)[1].Name)
+	require.Equal(t, "woman", (*s.CustomListValElePtr)[1].Sex)
 }
 
 func TestLoader_Load_Default(t *testing.T) {
