@@ -247,7 +247,7 @@ func setField(field reflect.Value, value string) error {
 				errs = append(errs, err)
 			}
 		}
-		return fmt.Errorf("loader: %v", errs)
+		return fmt.Errorf("%v", errs)
 	}
 
 	switch refType.Kind() {
@@ -299,7 +299,7 @@ func setField(field reflect.Value, value string) error {
 	case reflect.Array:
 		parts := strings.Split(value, " ")
 		if len(parts) != field.Len() {
-			return fmt.Errorf("loader: not enough elements for set %s", refType.String())
+			return fmt.Errorf("not enough elements for set %s", refType.String())
 		}
 		for i, p := range parts {
 			if err := setField(field.Index(i), p); err != nil {
@@ -312,15 +312,15 @@ func setField(field reflect.Value, value string) error {
 
 		for _, pair := range pairs {
 			kv := strings.Split(pair, ":")
-			if len(kv) != 2 {
-				return errors.New("loader: invalid map items")
+			if len(kv) < 2 {
+				return errors.New("invalid map items")
 			}
 			k := reflect.New(refType.Key()).Elem()
 			if err := setField(k, kv[0]); err != nil {
 				return err
 			}
 			v := reflect.New(refType.Elem()).Elem()
-			if err := setField(v, kv[1]); err != nil {
+			if err := setField(v, strings.Join(kv[1:], ":")); err != nil {
 				return err
 			}
 			mp.SetMapIndex(k, v)

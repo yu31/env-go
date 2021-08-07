@@ -183,7 +183,7 @@ TimeDuration=30s
 TimeDurationPtr=1m
 MapInt=10:100 20:200
 MapIntPtr=30:300 40:400
-MapStr=a1:b1 a2:b2
+MapStr=a1:b1 a2:b2:b2
 MapStrPtr=c1:d1 c1:d2
 CustomSetter=CustomSetter
 CustomSetterPtr=CustomSetterPtr
@@ -336,7 +336,7 @@ func TestLoader_Load_ByEnv(t *testing.T) {
 	require.Equal(t, map[int]int{10: 100, 20: 200}, s.MapInt)
 	require.Equal(t, 300, *s.MapIntPtr[30])
 	require.Equal(t, 400, *s.MapIntPtr[40])
-	require.Equal(t, map[string]string{"a1": "b1", "a2": "b2"}, s.MapStr)
+	require.Equal(t, map[string]string{"a1": "b1", "a2": "b2:b2"}, s.MapStr)
 	require.Equal(t, "d2", *s.MapStrPtr["c1"])
 
 	require.Equal(t, "CustomSetter", *s.CustomSetter.Value)
