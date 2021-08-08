@@ -424,6 +424,33 @@ func TestLoader_Load_NotStruct(t *testing.T) {
 	require.Equal(t, ErrNotStructPtr, err)
 }
 
+func TestLoader_Load_Override(t *testing.T) {
+	os.Clearenv()
+	type Config struct {
+		Timeout int `loader:"TIMEOUT,default=10"`
+	}
+
+	cfg := &Config{}
+	l := New(WithOverride(true))
+	err := l.Load(cfg)
+	require.Nil(t, err, "%+v", err)
+	require.Equal(t, 10, cfg.Timeout)
+
+	// Don't override with default value.
+	cfg = &Config{Timeout: 5}
+	err = l.Load(cfg)
+	require.Nil(t, err, "%+v", err)
+	require.Equal(t, 5, cfg.Timeout)
+
+	// If key's value is non-zero, override it.
+	os.Clearenv()
+	os.Setenv("TIMEOUT", "100")
+	cfg = &Config{Timeout: 5}
+	err = l.Load(cfg)
+	require.Nil(t, err, "%+v", err)
+	require.Equal(t, 100, cfg.Timeout)
+}
+
 func BenchmarkLoader_Load_ByEnv(b *testing.B) {
 	os.Clearenv()
 	for _, line := range strings.Split(SpecEnvs, "\n") {

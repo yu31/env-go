@@ -165,8 +165,8 @@ func (p *Loader) loadValue(refVal reflect.Value, prefix string) error {
 		if err != nil {
 			return err
 		}
-		// Use default value if the key not be set.
-		if !found {
+		// Use default value if the key not be set and field value is zero.
+		if !found && field.IsZero() {
 			value = tag.defVal
 		}
 		if value == "" {
