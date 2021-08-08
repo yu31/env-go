@@ -1,4 +1,4 @@
-package loader
+package loader_test
 
 import (
 	"encoding/json"
@@ -9,6 +9,8 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
+
+	"github.com/DataWorkbench/loader"
 )
 
 var prefix = "LOADER"
@@ -231,7 +233,7 @@ func TestLoader_Load_ByEnv(t *testing.T) {
 
 	s := &Specification{}
 
-	l := New(WithPrefix(prefix))
+	l := loader.New(loader.WithPrefix(prefix))
 	err := l.Load(s)
 	require.Nil(t, err, "%+v", err)
 
@@ -395,7 +397,7 @@ func TestLoader_Load_Default(t *testing.T) {
 	os.Clearenv()
 	s := &Specification{}
 
-	l := New(WithPrefix(prefix))
+	l := loader.New(loader.WithPrefix(prefix))
 	err := l.Load(s)
 	require.Nil(t, err, "%+v", err)
 
@@ -409,19 +411,19 @@ func TestLoader_Load_Default(t *testing.T) {
 func TestLoader_Load_NotPtr(t *testing.T) {
 	os.Clearenv()
 	s := Specification{}
-	l := New(WithPrefix(prefix))
+	l := loader.New(loader.WithPrefix(prefix))
 	err := l.Load(s)
 	require.NotNil(t, err, "%+v", err)
-	require.Equal(t, ErrNotStructPtr, err)
+	require.Equal(t, loader.ErrNotStructPtr, err)
 }
 
 func TestLoader_Load_NotStruct(t *testing.T) {
 	os.Clearenv()
 	var x string
-	l := New(WithPrefix(prefix))
+	l := loader.New(loader.WithPrefix(prefix))
 	err := l.Load(&x)
 	require.NotNil(t, err, "%+v", err)
-	require.Equal(t, ErrNotStructPtr, err)
+	require.Equal(t, loader.ErrNotStructPtr, err)
 }
 
 func TestLoader_Load_Override(t *testing.T) {
@@ -431,7 +433,7 @@ func TestLoader_Load_Override(t *testing.T) {
 	}
 
 	cfg := &Config{}
-	l := New(WithOverride(true))
+	l := loader.New(loader.WithOverride(true))
 	err := l.Load(cfg)
 	require.Nil(t, err, "%+v", err)
 	require.Equal(t, 10, cfg.Timeout)
@@ -461,7 +463,7 @@ func BenchmarkLoader_Load_ByEnv(b *testing.B) {
 		err := os.Setenv(strings.ToUpper(prefix+"_"+kv[0]), kv[1])
 		require.Nil(b, err)
 	}
-	l := New(WithPrefix(prefix))
+	l := loader.New(loader.WithPrefix(prefix))
 
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
