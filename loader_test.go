@@ -1,4 +1,4 @@
-package loader_test
+package env_test
 
 import (
 	"encoding/json"
@@ -10,10 +10,10 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/DataWorkbench/loader"
+	"github.com/yu31/env"
 )
 
-var prefix = "LOADER"
+var prefix = "env"
 
 type CustomList struct {
 	Name string
@@ -37,93 +37,93 @@ func (cu *CustomSetter) Set(value string) error {
 }
 
 type Embedded2 struct {
-	Em2Int      int     `loader:"Em2Int"`
-	Em2IntPtr   *int    `loader:"Em2IntPtr"`
-	Em2Str      string  `loader:"Em2Str"`
-	Em2StrPtr   *string `loader:"Em2StrPtr"`
-	Em2IntSlice []int   `loader:"Em2IntSlice"`
+	Em2Int      int     `env:"Em2Int"`
+	Em2IntPtr   *int    `env:"Em2IntPtr"`
+	Em2Str      string  `env:"Em2Str"`
+	Em2StrPtr   *string `env:"Em2StrPtr"`
+	Em2IntSlice []int   `env:"Em2IntSlice"`
 }
 
 type Embedded1 struct {
-	Embedded2 Embedded2 `loader:"Embedded2"`
-	Em1Int    int       `loader:"Em1Int"`
-	Em1IntPtr *int      `loader:"Em1IntPtr"`
-	Em1Str    string    `loader:"Em1Str"`
-	Em1StrPtr *string   `loader:"Em1StrPtr"`
+	Embedded2 Embedded2 `env:"Embedded2"`
+	Em1Int    int       `env:"Em1Int"`
+	Em1IntPtr *int      `env:"Em1IntPtr"`
+	Em1Str    string    `env:"Em1Str"`
+	Em1StrPtr *string   `env:"Em1StrPtr"`
 }
 
 type Specification struct {
-	Bool                bool               `loader:"Bool"`
-	BoolPtr             *bool              `loader:"BoolPtr"`
-	Str                 string             `loader:"Str,default=x1"`
-	StrPtr              *string            `loader:"StrPtr,default=y1"`
-	Float32             float32            `loader:"Float32"`
-	Float64             float64            `loader:"Float64"`
-	Float32Ptr          *float32           `loader:"Float32Ptr"`
-	Float64Ptr          *float64           `loader:"Float64Ptr"`
-	Int                 int                `loader:"Int"`
-	Int8                int8               `loader:"Int8"`
-	Int16               int16              `loader:"Int16"`
-	Int32               int32              `loader:"Int32"`
-	Int64               int64              `loader:"Int64"`
-	IntPtr              *int               `loader:"IntPtr"`
-	Int8Ptr             *int8              `loader:"Int8Ptr"`
-	Int16Ptr            *int16             `loader:"Int16Ptr"`
-	Int32Ptr            *int32             `loader:"Int32Ptr"`
-	Int64Ptr            *int64             `loader:"Int64Ptr"`
-	Uint                uint               `loader:"Uint"`
-	Uint8               uint8              `loader:"Uint8"`
-	Uint16              uint16             `loader:"Uint16"`
-	Uint32              uint32             `loader:"Uint32"`
-	Uint64              uint64             `loader:"Uint64"`
-	UintPtr             *uint              `loader:"UintPtr"`
-	Uint8Ptr            *uint8             `loader:"Uint8Ptr"`
-	Uint16Ptr           *uint16            `loader:"Uint16Ptr"`
-	Uint32Ptr           *uint32            `loader:"Uint32Ptr"`
-	Uint64Ptr           *uint64            `loader:"Uint64Ptr"`
-	StrArray            [3]string          `loader:"StrArray"`
-	StrArrayPtr         *[3]string         `loader:"StrArrayPtr"`
-	StrArrayElePtr      [3]*string         `loader:"StrArrayElePtr"`
-	StrArrayValElePtr   *[3]*string        `loader:"StrArrayValElePtr"`
-	StrSlice            []string           `loader:"StrSlice,default=x1 x2 x3"`
-	StrSlicePtr         *[]string          `loader:"StrSlicePtr,default=y1 y2 y3"`
-	StrSliceElePtr      []*string          `loader:"StrSliceElePtr"`
-	StrSliceValElePtr   *[]*string         `loader:"StrSliceValElePtr"`
-	IntArray            [3]int             `loader:"IntArray"`
-	IntArrayPtr         *[3]int            `loader:"IntArrayPtr"`
-	IntArrayElePtr      [3]*int            `loader:"IntArrayElePtr"`
-	IntArrayValElePtr   *[3]*int           `loader:"IntArrayValElePtr"`
-	IntSlice            []int              `loader:"IntSlice"`
-	IntSlicePtr         *[]int             `loader:"IntSlicePtr"`
-	IntSliceElePtr      []*int             `loader:"IntSliceElePtr"`
-	IntSliceValElePtr   *[]*int            `loader:"IntSliceValElePtr"`
-	UintArray           [3]uint            `loader:"UintArray"`
-	UintArrayPtr        *[3]uint           `loader:"UintArrayPtr"`
-	UintArrayElePtr     [3]*uint           `loader:"UintArrayElePtr"`
-	UintArrayValElePtr  *[3]*uint          `loader:"UintArrayValElePtr"`
-	UintSlice           []uint             `loader:"UintSlice"`
-	UintSlicePtr        *[]uint            `loader:"UintSlicePtr"`
-	UintSliceElePtr     []*uint            `loader:"UintSliceElePtr"`
-	UintSliceValElePtr  *[]*uint           `loader:"UintSliceValElePtr"`
-	URL                 url.URL            `loader:"URL"`
-	URLPtr              *url.URL           `loader:"URLPtr"`
-	TimeDuration        time.Duration      `loader:"TimeDuration"`
-	TimeDurationPtr     *time.Duration     `loader:"TimeDurationPtr"`
-	MapInt              map[int]int        `loader:"MapInt"`
-	MapIntPtr           map[int]*int       `loader:"MapIntPtr"`
-	MapStr              map[string]string  `loader:"MapStr"`
-	MapStrPtr           map[string]*string `loader:"MapStrPtr"`
-	CustomSetter        CustomSetter       `loader:"CustomSetter"`
-	CustomSetterPtr     *CustomSetter      `loader:"CustomSetterPtr"`
-	Embedded1           Embedded1          `loader:"Embedded1"`
-	Embedded1Ptr        *Embedded1         `loader:"Embedded1Ptr"`
-	TimeTime            time.Time          `loader:"TimeTime"`
-	TimeTimePtr         *time.Time         `loader:"TimeTimePtr"`
-	Message             string             `loader:"MESSAGE,default=Hello World"` // used to test default value with space
-	CustomList          []CustomList       `loader:"CustomList"`
-	CustomListPtr       *[]CustomList      `loader:"CustomListPtr"`
-	CustomListElePtr    []*CustomList      `loader:"CustomListElePtr"`
-	CustomListValElePtr *[]*CustomList     `loader:"CustomListValElePtr"`
+	Bool                bool               `env:"Bool"`
+	BoolPtr             *bool              `env:"BoolPtr"`
+	Str                 string             `env:"Str,default=x1"`
+	StrPtr              *string            `env:"StrPtr,default=y1"`
+	Float32             float32            `env:"Float32"`
+	Float64             float64            `env:"Float64"`
+	Float32Ptr          *float32           `env:"Float32Ptr"`
+	Float64Ptr          *float64           `env:"Float64Ptr"`
+	Int                 int                `env:"Int"`
+	Int8                int8               `env:"Int8"`
+	Int16               int16              `env:"Int16"`
+	Int32               int32              `env:"Int32"`
+	Int64               int64              `env:"Int64"`
+	IntPtr              *int               `env:"IntPtr"`
+	Int8Ptr             *int8              `env:"Int8Ptr"`
+	Int16Ptr            *int16             `env:"Int16Ptr"`
+	Int32Ptr            *int32             `env:"Int32Ptr"`
+	Int64Ptr            *int64             `env:"Int64Ptr"`
+	Uint                uint               `env:"Uint"`
+	Uint8               uint8              `env:"Uint8"`
+	Uint16              uint16             `env:"Uint16"`
+	Uint32              uint32             `env:"Uint32"`
+	Uint64              uint64             `env:"Uint64"`
+	UintPtr             *uint              `env:"UintPtr"`
+	Uint8Ptr            *uint8             `env:"Uint8Ptr"`
+	Uint16Ptr           *uint16            `env:"Uint16Ptr"`
+	Uint32Ptr           *uint32            `env:"Uint32Ptr"`
+	Uint64Ptr           *uint64            `env:"Uint64Ptr"`
+	StrArray            [3]string          `env:"StrArray"`
+	StrArrayPtr         *[3]string         `env:"StrArrayPtr"`
+	StrArrayElePtr      [3]*string         `env:"StrArrayElePtr"`
+	StrArrayValElePtr   *[3]*string        `env:"StrArrayValElePtr"`
+	StrSlice            []string           `env:"StrSlice,default=x1 x2 x3"`
+	StrSlicePtr         *[]string          `env:"StrSlicePtr,default=y1 y2 y3"`
+	StrSliceElePtr      []*string          `env:"StrSliceElePtr"`
+	StrSliceValElePtr   *[]*string         `env:"StrSliceValElePtr"`
+	IntArray            [3]int             `env:"IntArray"`
+	IntArrayPtr         *[3]int            `env:"IntArrayPtr"`
+	IntArrayElePtr      [3]*int            `env:"IntArrayElePtr"`
+	IntArrayValElePtr   *[3]*int           `env:"IntArrayValElePtr"`
+	IntSlice            []int              `env:"IntSlice"`
+	IntSlicePtr         *[]int             `env:"IntSlicePtr"`
+	IntSliceElePtr      []*int             `env:"IntSliceElePtr"`
+	IntSliceValElePtr   *[]*int            `env:"IntSliceValElePtr"`
+	UintArray           [3]uint            `env:"UintArray"`
+	UintArrayPtr        *[3]uint           `env:"UintArrayPtr"`
+	UintArrayElePtr     [3]*uint           `env:"UintArrayElePtr"`
+	UintArrayValElePtr  *[3]*uint          `env:"UintArrayValElePtr"`
+	UintSlice           []uint             `env:"UintSlice"`
+	UintSlicePtr        *[]uint            `env:"UintSlicePtr"`
+	UintSliceElePtr     []*uint            `env:"UintSliceElePtr"`
+	UintSliceValElePtr  *[]*uint           `env:"UintSliceValElePtr"`
+	URL                 url.URL            `env:"URL"`
+	URLPtr              *url.URL           `env:"URLPtr"`
+	TimeDuration        time.Duration      `env:"TimeDuration"`
+	TimeDurationPtr     *time.Duration     `env:"TimeDurationPtr"`
+	MapInt              map[int]int        `env:"MapInt"`
+	MapIntPtr           map[int]*int       `env:"MapIntPtr"`
+	MapStr              map[string]string  `env:"MapStr"`
+	MapStrPtr           map[string]*string `env:"MapStrPtr"`
+	CustomSetter        CustomSetter       `env:"CustomSetter"`
+	CustomSetterPtr     *CustomSetter      `env:"CustomSetterPtr"`
+	Embedded1           Embedded1          `env:"Embedded1"`
+	Embedded1Ptr        *Embedded1         `env:"Embedded1Ptr"`
+	TimeTime            time.Time          `env:"TimeTime"`
+	TimeTimePtr         *time.Time         `env:"TimeTimePtr"`
+	Message             string             `env:"MESSAGE,default=Hello World"` // used to test default value with space
+	CustomList          []CustomList       `env:"CustomList"`
+	CustomListPtr       *[]CustomList      `env:"CustomListPtr"`
+	CustomListElePtr    []*CustomList      `env:"CustomListElePtr"`
+	CustomListValElePtr *[]*CustomList     `env:"CustomListValElePtr"`
 }
 
 var SpecEnvs = `
@@ -220,7 +220,7 @@ func init() {
 	SpecEnvs = strings.TrimSuffix(SpecEnvs, "\n")
 }
 
-func TestLoader_Load_ByEnv(t *testing.T) {
+func TestEnv_Load_ByEnv(t *testing.T) {
 	os.Clearenv()
 	for _, line := range strings.Split(SpecEnvs, "\n") {
 		if line == "" {
@@ -233,7 +233,7 @@ func TestLoader_Load_ByEnv(t *testing.T) {
 
 	s := &Specification{}
 
-	l := loader.New(loader.WithPrefix(prefix))
+	l := env.New(env.WithPrefix(prefix))
 	err := l.Load(s)
 	require.Nil(t, err, "%+v", err)
 
@@ -393,11 +393,11 @@ func TestLoader_Load_ByEnv(t *testing.T) {
 	require.Equal(t, "woman", (*s.CustomListValElePtr)[1].Sex)
 }
 
-func TestLoader_Load_Default(t *testing.T) {
+func TestEnv_Load_Default(t *testing.T) {
 	os.Clearenv()
 	s := &Specification{}
 
-	l := loader.New(loader.WithPrefix(prefix))
+	l := env.New(env.WithPrefix(prefix))
 	err := l.Load(s)
 	require.Nil(t, err, "%+v", err)
 
@@ -408,32 +408,32 @@ func TestLoader_Load_Default(t *testing.T) {
 	require.Equal(t, "Hello World", s.Message)
 }
 
-func TestLoader_Load_NotPtr(t *testing.T) {
+func TestEnv_Load_NotPtr(t *testing.T) {
 	os.Clearenv()
 	s := Specification{}
-	l := loader.New(loader.WithPrefix(prefix))
+	l := env.New(env.WithPrefix(prefix))
 	err := l.Load(s)
 	require.NotNil(t, err, "%+v", err)
-	require.Equal(t, loader.ErrNotStructPtr, err)
+	require.Equal(t, env.ErrNotStructPtr, err)
 }
 
-func TestLoader_Load_NotStruct(t *testing.T) {
+func TestEnv_Load_NotStruct(t *testing.T) {
 	os.Clearenv()
 	var x string
-	l := loader.New(loader.WithPrefix(prefix))
+	l := env.New(env.WithPrefix(prefix))
 	err := l.Load(&x)
 	require.NotNil(t, err, "%+v", err)
-	require.Equal(t, loader.ErrNotStructPtr, err)
+	require.Equal(t, env.ErrNotStructPtr, err)
 }
 
-func TestLoader_Load_Override(t *testing.T) {
+func TestEnv_Load_Override(t *testing.T) {
 	os.Clearenv()
 	type Config struct {
-		Timeout int `loader:"TIMEOUT,default=10"`
+		Timeout int `env:"TIMEOUT,default=10"`
 	}
 
 	cfg := &Config{}
-	l := loader.New(loader.WithOverride(true))
+	l := env.New(env.WithOverride(true))
 	err := l.Load(cfg)
 	require.Nil(t, err, "%+v", err)
 	require.Equal(t, 10, cfg.Timeout)
@@ -453,7 +453,7 @@ func TestLoader_Load_Override(t *testing.T) {
 	require.Equal(t, 100, cfg.Timeout)
 }
 
-func BenchmarkLoader_Load_ByEnv(b *testing.B) {
+func BenchmarkEnv_Load_ByEnv(b *testing.B) {
 	os.Clearenv()
 	for _, line := range strings.Split(SpecEnvs, "\n") {
 		if line == "" {
@@ -463,7 +463,7 @@ func BenchmarkLoader_Load_ByEnv(b *testing.B) {
 		err := os.Setenv(strings.ToUpper(prefix+"_"+kv[0]), kv[1])
 		require.Nil(b, err)
 	}
-	l := loader.New(loader.WithPrefix(prefix))
+	l := env.New(env.WithPrefix(prefix))
 
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {

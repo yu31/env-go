@@ -1,4 +1,4 @@
-package loader
+package env
 
 import (
 	"errors"
@@ -11,68 +11,13 @@ import (
 )
 
 const (
-	defaultTagName = "loader"
+	defaultTagName = "env"
 )
-
-// ErrNotStructPtr is returned if you pass something that is not a pointer to a
-// Struct to Parse
-var ErrNotStructPtr = errors.New("loader: expected a pointer to a Struct")
-
-// A ParseError occurs when an environment variable cannot be converted to
-// the type required by a struct field during assignment.
-type ParseError struct {
-	KeyName   string
-	FieldName string
-	TypeName  string
-	Value     string
-	Err       error
-}
-
-func (e *ParseError) Error() string {
-	return fmt.Sprintf("loader: assigning '%s' to '%s': converting '%s' to type '%s'. details: %s", e.KeyName, e.FieldName, e.Value, e.TypeName, e.Err)
-}
 
 // tagInfo maintains information about the struct tags
 type tagInfo struct {
 	key    string
 	defVal string
-}
-
-type options struct {
-	prefix   string
-	tagName  string
-	override bool
-	getter   Getter
-}
-
-type Option func(opts *options)
-
-// WithTagName set struct's tag name
-func WithTagName(name string) Option {
-	return func(opts *options) {
-		opts.tagName = name
-	}
-}
-
-// WithTagName set key's prefix
-func WithPrefix(prefix string) Option {
-	return func(opts *options) {
-		opts.prefix = prefix
-	}
-}
-
-// WithGetter set loader's Getter instances
-func WithGetter(getter Getter) Option {
-	return func(opts *options) {
-		opts.getter = getter
-	}
-}
-
-// WithOverride in force override an existing value
-func WithOverride(ok bool) Option {
-	return func(opts *options) {
-		opts.override = ok
-	}
 }
 
 // Loader populates the specified struct based on environment variables
@@ -96,7 +41,7 @@ func (p *Loader) lazyInit() {
 			prefix:   "",
 			tagName:  defaultTagName,
 			override: false,
-			getter:   &EnvGetter{},
+			getter:   &getter{},
 		}
 	})
 }
@@ -202,7 +147,7 @@ func (p *Loader) parseTags(structField reflect.StructField) (*tagInfo, error) {
 	}
 
 	if strings.Contains(key, " ") {
-		return nil, fmt.Errorf("loader: assigning '%s': invalid key in tag '%s', cannot contain white space characters", structField.Name, structField.Tag)
+		return nil, fmt.Errorf("env: assigning '%s': invalid key in tag '%s', cannot contain white space characters", structField.Name, structField.Tag)
 	}
 
 	tags := &tagInfo{
@@ -216,7 +161,7 @@ func (p *Loader) parseTags(structField reflect.StructField) (*tagInfo, error) {
 		switch k {
 		case "default":
 			if len(x) != 2 {
-				return nil, fmt.Errorf("loader: assigning '%s': cannot parse keyword 'default' from tag '%s', format sample: 'default=xxx'", structField.Name, structField.Tag)
+				return nil, fmt.Errorf("env: assigning '%s': cannot parse keyword 'default' from tag '%s', format sample: 'default=xxx'", structField.Name, structField.Tag)
 			}
 			tags.defVal = x[1]
 		default:

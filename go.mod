@@ -1,4 +1,4 @@
-module github.com/DataWorkbench/loader
+module github.com/yu31/env
 
 go 1.15
 

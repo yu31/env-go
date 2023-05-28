@@ -1,6 +1,6 @@
-# loader
+# env
 
-loader if a golang library for managing configuration data from environment variables or K/V storage
+env is a golang library for managing configuration data from environment variables or K/V storage
 
 ## Features
 * User-define struct tag name
@@ -31,11 +31,11 @@ Embedded structs using these fields are also supported.
 ## Installation
 
 ```bash
-go get -u github.com/DataWorkbench/loader
+go get -u github.com/yu31/env-go
 ```
 Used in go modules
 ```bash
-go get -insecure github.com/DataWorkbench/loader
+go get -insecure github.com/yu31/env-go
 ```
 
 ## Usage
@@ -55,7 +55,7 @@ export MYAPP_NAME1="name1"
 export MYAPP_NAME2="name1"
 ```
 
-The field will be ignore which are not set tag or tag key is "-".
+The field will be ignored which are not set tag or tag key is "-".
 
 ```Go
 package main
@@ -65,28 +65,28 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/DataWorkbench/loader"
+	"github.com/yu31/env"
 )
 
 type Embedded struct {
-	Number int64 `loader:"NUMBER"`
+	Number int64 `env:"NUMBER"`
 }
 
 type Config struct {
-	Address    string         `loader:"ADDRESS"`
-	Port       int            `loader:"PORT"`
-	Timeout    time.Duration  `loader:"TIMEOUT"`
-	Users      []string       `loader:"USERS"`
-	Rate       float32        `loader:"ROTE"`
-	ColorCodes map[string]int `loader:"COLORCODES"`
-	Embedded   *Embedded      `loader:"Embedded"`
-	Name1      string         `loader:"-"`
+	Address    string         `env:"ADDRESS"`
+	Port       int            `env:"PORT"`
+	Timeout    time.Duration  `env:"TIMEOUT"`
+	Users      []string       `env:"USERS"`
+	Rate       float32        `env:"ROTE"`
+	ColorCodes map[string]int `env:"COLORCODES"`
+	Embedded   *Embedded      `env:"Embedded"`
+	Name1      string         `env:"-"`
 	Name2      string
 }
 
 func main() {
 	var c Config
-	l := loader.New(loader.WithPrefix("MYAPP"))
+	l := env.New(env.WithPrefix("MYAPP"))
 	if err := l.Load(&c); err != nil {
 		fmt.Println(err)
 	}
@@ -136,7 +136,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/DataWorkbench/loader"
+	"github.com/yu31/env"
 )
 
 type CustomTag struct {
@@ -146,7 +146,7 @@ type CustomTag struct {
 
 func main() {
 	var c CustomTag
-	l := loader.New(loader.WithPrefix("TEST"), loader.WithTagName("env"))
+	l := env.New(env.WithPrefix("TEST"), env.WithTagName("env"))
 	if err := l.Load(&c); err != nil {
 		fmt.Println(err)
 	}
@@ -173,7 +173,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/DataWorkbench/loader"
+	"github.com/yu31/env"
 )
 
 type List struct{
@@ -217,7 +217,7 @@ func main() {
 	//os.Setenv("LISTS", "Joe/man Lisa/woman")
 
 	var c Config
-	l := loader.New(loader.WithTagName("env"))
+	l := env.New(env.WithTagName("env"))
 	if err := l.Load(&c); err != nil {
 		fmt.Println(err)
 	}
